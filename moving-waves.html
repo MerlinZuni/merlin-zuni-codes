@@ -1,0 +1,269 @@
+<!doctype html>
+<html>
+
+<head>
+
+    <title>Moving Waves</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Madurai:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lateef&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Corben:wght@700&family=Halant:wght@700&display=swap" rel="stylesheet">
+    <script language="javascript" type="text/javascript" src="simplex-noise.min.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 25px 50px;
+            width: 100%;
+            height: 100%;
+            /*font-size: 0; */
+            font-family: sans-serif;
+            color: #fff;
+            background-color: #191919;
+            user-select: none;
+        }
+
+        stage,
+        svg,
+        path {
+            position: fixed;
+            overflow: visible;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div>
+        <p><a href="menu.html">« back</a>&nbsp; | &nbsp;<a href="clock-experiment.html">next »</a></p>
+        <h1 style="color:gainsboro">Moving Waves</h1>
+        <p style="color:gainsboro">These waves were created with the magic of perlin noise.</p>
+    </div>    
+</body>
+
+<script>
+
+    //CODE
+
+    let twrk = {};
+
+
+    //COORDINATES
+
+    twrk.scale = function ({ width, height }) {
+        if (width) {
+            twrk.width = width;
+            twrk.res = window.innerWidth / twrk.width;
+            twrk.height = window.innerHeight / twrk.res;
+        } else if (height) {
+            twrk.height = height;
+            twrk.res = window.innerHeight / twrk.height;
+            twrk.width = window.innerWidth / twrk.res;
+        }
+        twrk.center = { x: twrk.width / 2, y: twrk.height / 2 };
+    }
+    twrk.scale({ height: 120 });
+
+
+    //SVG
+
+    let svg = {};
+
+    svg.nameSpace = "http://www.w3.org/2000/svg";
+
+    svg.path = function (ia) {
+
+        let output = "M ";
+        for (var i = 0; i < ia.length; i++) {
+            output += ia[i].x * twrk.res + " " + ia[i].y * twrk.res + " ";
+        }
+        output += "z";
+
+        return output;
+    };
+
+    svg.paths = function (ia) {
+        let output = "";
+        for (var i = 0; i < ia.length; i++) {
+            output += svg.path(ia[i]);
+        }
+        return output;
+    };
+
+    svg.makeLayer = function ({ parent, id, x = 0, y = 0 }) {
+        dom[id] = document.createElementNS(svg.nameSpace, "svg");
+        dom[id].id = id;
+        dom[id].style.transform = "translateX(" + (x * twrk.res) + "px) translateY(" + (y * twrk.res) + "px)";
+        parent.appendChild(dom[id]);
+    };
+
+    svg.makeLine = function ({ parent, id, d = "", color = "#ff00ff", stroke = 1, cap = "butt", join = "round" }) {
+        dom[id] = document.createElementNS(svg.nameSpace, "path");
+        dom[id].setAttributeNS(null, "fill", "none");
+        dom[id].setAttributeNS(null, "d", d);
+        dom[id].setAttributeNS(null, "stroke-width", stroke * twrk.res);
+        dom[id].setAttributeNS(null, "stroke", color);
+        dom[id].setAttributeNS(null, "stroke-linecap", cap);
+        dom[id].setAttributeNS(null, "stroke-join", join);
+        dom[id].id = id;
+        parent.appendChild(dom[id]);
+    };
+
+    svg.makeShape = function ({ parent, id, d = "", color = "#ff00ff" }) {
+        dom[id] = document.createElementNS(svg.nameSpace, "path");
+        dom[id].setAttributeNS(null, "fill", color);
+        dom[id].setAttributeNS(null, "d", d);
+        dom[id].id = id;
+        parent.appendChild(dom[id]);
+    };
+
+    //drehung
+    lineRotation = function ({ point, long, rotation }) {
+        return [
+            { x: point.x, y: point.y },
+            { x: point.x + Math.sin(rotation) * long, y: point.y + Math.cos(rotation) * long }
+        ];
+    };
+
+    //DOM
+
+    let dom = {};
+
+    //stage
+    dom.stage = document.createElement("stage");
+    dom.stage.style.transform = "translateX(" + (twrk.center.x * twrk.res) + "px) translateY(" + (twrk.center.y * twrk.res) + "px)";
+    dom.stage.id = "stage";
+    document.body.appendChild(dom.stage);
+
+    //svg layer
+    svg.makeLayer({ parent: dom.stage, id: "svgLayer", x: 0, y: 0 });
+
+    let simplex = new SimplexNoise();
+
+    //drawing
+
+    let step = 2;
+    let position = { x: -50, y: -50 };
+    let resolution = 0.00002;
+    let speed = 0.000001;
+
+    // Line Red
+    svg.makeLine({ 
+        parent: dom.svgLayer, 
+        id: "lines", 
+        cap: "round", 
+        stroke: 0.2, 
+        color: "#FF4B5E", 
+        d: "" 
+    });
+        //  d: svg.path([ { x: -90 + x * 0.3, y: -50+simplex.noise2D(y/24, 0)*14 + collect * chance 
+
+    // Line Blue
+    svg.makeLine({
+        parent: dom.svgLayer,  
+        id: "linesTwo",     
+        cap: "round",
+        stroke: 0.2,
+        color: "#3AB5B1",
+        d: "" 
+    });
+        // d: svg.path([ { x: -90 + x * 0.3 , y: 50+simplex.noise2D(y/32, 0)*13 - collect * chance  } ])
+
+    function loop(time) {
+
+        let collect = []; //[[{x: 10, y: 10}, {x: 20, y: 20}], [{x: 10, y: 10}, {x: 20, y: 20}], [{x: 10, y: 10}, {x: 20, y: 20}]];
+        let collectTwo = []; 
+        for (let y = 0; y < 45; y++) {
+            for (let x = 0; x < 45; x++) {
+
+                // variable math
+                let radian = simplex.noise3D(x * resolution, y * resolution, time * speed) * Math.PI;
+                let distance = (2 + simplex.noise3D(y * resolution, x * resolution, time * speed)) * 2;
+
+               // let chance = Math.random();              
+
+                collect.push(lineRotation({
+                    point: { 
+                        // added simlex to the x axis
+                        x: position.x + x * step + simplex.noise3D(x, radian * y, speed), 
+                        y: position.y + 5 + simplex.noise3D(y, radian * x, speed/2) * 10 
+                    },
+                    // I played with value variations  for different movements
+                    rotation: radian*4,
+                    long: distance/12
+                }));
+                collectTwo.push(lineRotation({
+                    point: { 
+                        x: position.x + x * step + simplex.noise3D(x/2, radian * y, speed/12), 
+                        y: position.y + 15 + simplex.noise3D(x, radian * y, speed/18) * 8 },
+                    rotation: radian*3,
+                    long: distance/12 + speed
+                }));
+                collect.push(lineRotation({
+                    point: { 
+                        // added simlex to the x axis
+                        x: position.x + x * step + simplex.noise3D(x, radian * y, speed/4), 
+                        y: position.y + 25 + simplex.noise3D(y, radian * x, speed/6) * 9 
+                    },
+                    // I played with value variations  for different movements
+                    rotation: radian*5,
+                    long: distance/12 + speed
+                }));
+                collectTwo.push(lineRotation({
+                    point: { 
+                        x: position.x + x * step + simplex.noise3D(x/2, radian * y, speed/12), 
+                        y: position.y + 35 + simplex.noise3D(x, radian * y, speed*18) * 10 
+                    },
+                    rotation: radian*3,
+                    long: distance/12 + speed
+                }));
+                collect.push(lineRotation({
+                    point: { 
+                        // added simlex to the x axis
+                        x: position.x + x * step + simplex.noise3D(x, radian * y, speed/4), 
+                        y: position.y + 45 + simplex.noise3D(y, radian * x, speed/24) * 12 
+                    },
+                    // I played with value variations  for different movements
+                    rotation: radian*5,
+                    long: distance/12 + speed
+                }));
+                collectTwo.push(lineRotation({
+                    point: { 
+                        x: position.x + x * step + simplex.noise3D(x/2, radian * y, speed/6), 
+                        y: position.y + 55 + simplex.noise3D(x, radian * y, speed/8) * 14 
+                    },
+                    rotation: radian*3,
+                    long: distance/12 + speed
+                }));
+                collect.push(lineRotation({
+                    point: { 
+                        // added simlex to the x axis
+                        x: position.x + x * step + simplex.noise3D(x*2, radian * y, speed), 
+                        y: position.y + 65 + simplex.noise3D(y, radian * x, speed/2) * 10 
+                    },
+                    // I played with value variations  for different movements
+                    rotation: radian*4,
+                    long: distance/12
+                }));
+                
+                // point: { x: position.x + x * step, y: position.y + y * step 
+            }
+        }
+
+        dom["lines"].setAttributeNS(null, "d", svg.paths(collect));
+        dom["linesTwo"].setAttributeNS(null, "d", svg.paths(collectTwo));
+        requestAnimationFrame(loop);
+
+    };
+
+    loop(0);
+
+
+
+
+</script>
+
+</html>
