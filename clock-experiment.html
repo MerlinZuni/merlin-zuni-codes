@@ -1,48 +1,59 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Rotating Clock</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Madurai:wght@300&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Lateef&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Corben:wght@700&family=Halant:wght@700&display=swap" rel="stylesheet">
-
-    <script src="p5.min.js" async></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Rotating Clock — Merlin Zuni Codes</title>
+    <link rel="stylesheet" href="site-shared.css">
 </head>
+<body class="site-body page-clock-bauhaus">
+    <header class="site-header">
+        <div class="site-header-inner">
+            <a href="index.html" class="site-logo" aria-label="Merlin Zuni Codes — home">
+                <span class="site-logo-line">Merlin</span>
+                <span class="site-logo-line">Zuni</span>
+                <span class="site-logo-line">Codes</span>
+            </a>
+            <nav class="site-nav" aria-label="Experiments">
+            <ul>
+                <li><a href="clock-experiment.html"><div class="menu is-current"><div class="menu-inner">The rotating clock</div></div></a></li>
+                <li><a href="molnar-boxes.html"><div class="menu"><div class="menu-inner">Molnar Boxes</div></div></a></li>
+                <li><a href="particle-waves.html"><div class="menu"><div class="menu-inner">Particle waves</div></div></a></li>
+                <li><a href="moving-waves.html"><div class="menu"><div class="menu-inner">Moving waves</div></div></a></li>
+                <li><a href="moving-grid.html"><div class="menu"><div class="menu-inner">Moving grid</div></div></a></li>
+            </ul>
+        </nav>
+        </div>
+    </header>
 
-<body>
-    <p><a href="menu.html">« back</a>&nbsp; | &nbsp;<a href="molnar-boxes.html">next »</a></p>
-    <div>
-        <h1>Rotating Clock</h1>
-        <p>This clock was built as an experiment in rotation with <a href="https://en.wikipedia.org/wiki/Sine_and_cosine">cos() & sin()</a>.</p>
-    </div>
-    <script src="clock.js" async></script>
-    <div id="clock-container"></div>
-    <div>
-        <div>
-            <h3>Rotating Parts</h3>
-            <p>The clock is broken into different time increments. Hours, minutes & seconds.
-            </p>
-        </div>   
-        <div>
-            <h3>Hours</h3>
-            <p>The hours are based on 12 hours for the innermost rotation of the grey hour hand.
-            </p>
-        </div>   
-        <div>
-            <h3>Minutes</h3>
-            <p>This part of the hand is based on 60 minutes, the minute arm is red.
-            </p>
-        </div>   
-        <div>
-            <h3>Seconds</h3>
-            <p>The seconds hand is the last blue part of the arm.
-            </p>
-        </div>    
-    </div>
-    <script>
+    <main class="site-main site-main--clock-bauhaus">
+        <h1>Rotating clock</h1>
+        <p class="bauhaus-lead">Flat geometry, primary colours, and local time—rotation driven by <a href="https://en.wikipedia.org/wiki/Sine_and_cosine">cos() &amp; sin()</a> on a 12-hour dial.</p>
 
-    </script>
+        <div id="clock-container" class="clock-stage" aria-label="Analog clock canvas"></div>
+
+        <div class="bauhaus-panels">
+            <section class="bauhaus-panel bauhaus-panel--coral">
+                <h2>Rotating parts</h2>
+                <p>Three hands meet at the centre of a coral disc. Each turn spans real time: 12 hours, 60 minutes, 60 seconds—no gradients, no shadows, only hard edges.</p>
+            </section>
+            <section class="bauhaus-panel bauhaus-panel--ink">
+                <h2>Hours</h2>
+                <p>The heavy black hand is the slowest marker—12 hours for a full rotation, with minutes folded in so it inches forward between numerals, like a mechanical clock.</p>
+            </section>
+            <section class="bauhaus-panel bauhaus-panel--yellow">
+                <h2>Minutes</h2>
+                <p>The golden-yellow hand turns once every 60 minutes, including the current seconds so it moves continuously with the hour hand.</p>
+            </section>
+            <section class="bauhaus-panel bauhaus-panel--blue">
+                <h2>Seconds</h2>
+                <p>The royal-blue hand is the fastest: one full turn per minute, smoothed with milliseconds so it sweeps rather than ticks.</p>
+            </section>
+        </div>
+    </main>
+
+    <script src="p5.min.js"></script>
+    <script src="clock.js"></script>
+    <script src="site-nav.js"></script>
 </body>
 </html>

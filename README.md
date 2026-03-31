@@ -14,6 +14,9 @@ A portal to a collection of creative coding experiments made while studying at t
 | `molnar-boxes.html` | Generative compositions inspired by Vera Molnár |
 | `particle-waves.html` | Particle systems driven by wave functions |
 | `moving-waves.html` | Animated wave fields |
+| `moving-grid.html` | Rotation / clock study (same p5 sketch as the clock page) |
+
+Experiment pages share **`site-shared.css`** (TBJ Interval + glass nav strip) and **`site-nav.js`** (character-cell link layout to match the index).
 
 ---
 

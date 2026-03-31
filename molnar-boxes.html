@@ -1,54 +1,163 @@
 <!doctype html>
-<html>
-
+<html lang="en">
 <head>
-
-    <title>Molanr Boxes</title>
-
     <meta charset="utf-8">
-    <meta name="viewport" content="initial-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Madurai:wght@300&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Lateef&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Corben:wght@700&family=Halant:wght@700&display=swap" rel="stylesheet">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Molnar Boxes — Merlin Zuni Codes</title>
+    <link rel="stylesheet" href="site-shared.css">
     <style>
-        body {
-            margin: 0;
-            padding: 25px 50px;
-            width: 100%;
-            height: 100%;
-            font-family: sans-serif;
-            color: #fff;
-            background-color: #000;
+        body.site-body.page-molnar {
             user-select: none;
         }
-
-        stage,
-        svg,
-        path {
-            position: fixed;
-            overflow: visible;
+        /* Hero scrolls with the page; site-shared sets stage/svg fixed — override so art is in-flow */
+        .page-molnar .molnar-hero {
+            position: relative;
+            z-index: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .page-molnar #stage {
+            position: relative !important;
+            inset: auto !important;
+            flex: 1 1 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: clamp(260px, 46vh, 560px);
+            width: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .page-molnar #stage #svgLayer {
+            position: relative !important;
+            top: auto !important;
+            left: auto !important;
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+            flex-shrink: 0;
+        }
+        .page-molnar #svgLayer path {
+            position: static !important;
+        }
+        /* Title uses default .site-main placement (same pattern as particle-waves.html) */
+        /* Exactly 20px between the bottom of the title and the top of the grid */
+        .page-molnar .site-main h1 {
+            margin-bottom: 0;
+        }
+        .page-molnar .molnar-hero {
+            margin-top: 20px;
+        }
+        /* Intro band sits directly under the grid (same scroll as artwork); reads “fixed” under the piece */
+        .page-molnar .molnar-hero-cap {
+            flex: 0 0 auto;
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 42rem;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 1.25rem clamp(1.25rem, 5vw, 3.5rem) 1.6rem;
+            box-sizing: border-box;
+            background: linear-gradient(
+                180deg,
+                rgba(5, 5, 5, 0.45) 0%,
+                rgba(5, 5, 5, 0.92) 45%,
+                rgba(5, 5, 5, 0.97) 100%
+            );
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            pointer-events: auto;
+            user-select: text;
+        }
+        .page-molnar .molnar-hero-cap h2 {
+            font-family: 'TBJInterval', monospace;
+            font-weight: 700;
+            font-size: clamp(1.15rem, 2.5vw, 1.65rem);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: rgba(255, 255, 255, 0.92);
+            margin: 0 0 0.5rem;
+        }
+        .page-molnar .molnar-hero-cap p {
+            font-family: 'TBJInterval', monospace;
+            font-weight: 300;
+            font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+            line-height: 1.55;
+            color: rgba(255, 255, 255, 0.72);
+            margin: 0 0 1rem;
+        }
+        .page-molnar .molnar-hero-cap a {
+            color: #12cfeb;
+        }
+        .page-molnar .molnar-hero-cap a:hover {
+            color: #5fe8ff;
+        }
+        .page-molnar .site-main--molnar-prose {
+            position: relative;
+            z-index: 1;
+            pointer-events: auto;
+            user-select: text;
+            max-width: 42rem;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 2rem clamp(1.25rem, 5vw, 3.5rem) 3rem;
         }
     </style>
-
 </head>
+<body class="site-body page-molnar">
+    <header class="site-header">
+        <div class="site-header-inner">
+            <a href="index.html" class="site-logo" aria-label="Merlin Zuni Codes — home">
+                <span class="site-logo-line">Merlin</span>
+                <span class="site-logo-line">Zuni</span>
+                <span class="site-logo-line">Codes</span>
+            </a>
+            <nav class="site-nav" aria-label="Experiments">
+            <ul>
+                <li><a href="clock-experiment.html"><div class="menu"><div class="menu-inner">The rotating clock</div></div></a></li>
+                <li><a href="molnar-boxes.html"><div class="menu is-current"><div class="menu-inner">Molnar Boxes</div></div></a></li>
+                <li><a href="particle-waves.html"><div class="menu"><div class="menu-inner">Particle waves</div></div></a></li>
+                <li><a href="moving-waves.html"><div class="menu"><div class="menu-inner">Moving waves</div></div></a></li>
+                <li><a href="moving-grid.html"><div class="menu"><div class="menu-inner">Moving grid</div></div></a></li>
+            </ul>
+        </nav>
+        </div>
+    </header>
 
-<body>
-    <div>
-        <p><a href="menu.html">« back</a>&nbsp; | &nbsp;<a href="particle-waves.html">next »</a></p>
-        <h1 style="color:gainsboro">Molnar Boxes</h1>
-    </div>   
-</body>
+    <main class="site-main">
+        <h1>Molnar boxes</h1>
+    </main>
+
+    <div class="molnar-hero">
+        <div class="molnar-hero-cap" aria-label="About Vera Molnár">
+            <h2>In the spirit of Vera Molnár</h2>
+            <p>
+                This piece nods to the grids and systematic variation in the work of
+                <a href="https://en.wikipedia.org/wiki/Vera_Moln%C3%A1r" rel="noopener noreferrer">Vera Molnár</a>
+                (1924–2023), the Hungarian-born artist who spent most of her life in Paris and is widely regarded as a pioneer of
+                <strong>generative and computer art</strong>. She began exploring combinatorial images in the 1950s, learned early programming languages such as Fortran and BASIC, and from 1968 onward used computers and plotters to make algorithmic drawings—often built from simple geometry and repetition with small, rule-based disruptions. Molnár was also among the first women to make computers a core part of a fine-art practice, and she co-founded research groups that linked contemporary art and technology, including Art et Informatique.
+            </p>
+        </div>
+    </div>
+
+    <section class="site-main site-main--molnar-prose" aria-label="More about this piece">
+        <p>
+            Here, a tight field of squares echoes the spirit of those experiments: a strict lattice, then chance and interpolation that gently push the composition away from perfect order—without claiming to reproduce any single Molnár work.
+        </p>
+
+        <h2>What the script is doing</h2>
+        <p>
+            The animation is driven by plain JavaScript in this page (no p5): it builds an SVG layer of square cells on a fixed grid. Each cell gets a <strong>vertical gradient</strong> by sampling a procedural color field across the canvas—warm reds and magentas toward the top, cool cyans and violets toward the bottom, with dark “ridges” inspired by abstract light. A <strong>film-grain filter</strong> is applied per path so texture sits only inside each filled square.
+        </p>
+        <p>
+            Every four seconds, new targets are chosen: each square rolls a fresh size (from a small set of scale steps) and new gradient colors (the whole field shifts together with a shared drift in the sample coordinates). The <strong>current values linearly interpolate</strong> toward those targets over the same four-second window, so the grid is always slowly moving. On first load, the opening frame already has two states—where each square starts and where it is heading—so motion begins immediately.
+        </p>
+    </section>
 
 <script>
-
-    //CODE
-
-    let twrk = {};
-
-
-    //COORDINATES
+(function () {
+    const twrk = {};
 
     twrk.scale = function ({ width, height }) {
         if (width) {
@@ -61,103 +170,347 @@
             twrk.width = window.innerWidth / twrk.res;
         }
         twrk.center = { x: twrk.width / 2, y: twrk.height / 2 };
-    }
+    };
     twrk.scale({ height: 120 });
 
+    const svg = {};
+    svg.nameSpace = 'http://www.w3.org/2000/svg';
 
-    //SVG
+    function clamp(v, a, b) {
+        return Math.max(a, Math.min(b, v));
+    }
+    function smoothstep(edge0, edge1, x) {
+        const t = clamp((x - edge0) / (edge1 - edge0), 0, 1);
+        return t * t * (3 - 2 * t);
+    }
+    function lerp(a, b, t) {
+        return a + (b - a) * t;
+    }
+    function lerpColor(a, b, t) {
+        return {
+            r: lerp(a.r, b.r, t),
+            g: lerp(a.g, b.g, t),
+            b: lerp(a.b, b.b, t),
+        };
+    }
 
-    let svg = {};
+    /**
+     * Normalized field [0,1]² → RGB; evokes vertical strips of fire / void / cyan–blue–violet.
+     */
+    function sampleField(nx, ny) {
+        const warmCore = { r: 255, g: 28, b: 72 };
+        const warmMagenta = { r: 255, g: 95, b: 135 };
+        const topBloom = (1 - ny) * (0.35 + 0.65 * Math.pow(Math.abs(nx - 0.5) * 2, 1.2));
+        let warm = lerpColor(warmCore, warmMagenta, topBloom * 0.55);
 
-    svg.nameSpace = "http://www.w3.org/2000/svg";
+        const cyan = { r: 0, g: 232, b: 248 };
+        const royal = { r: 45, g: 95, b: 255 };
+        const violet = { r: 175, g: 55, b: 255 };
+        const coolMid = lerpColor(cyan, royal, smoothstep(0.1, 0.95, nx));
+        const cool = lerpColor(coolMid, violet, nx * nx * 0.55);
+
+        const vertMix = smoothstep(0.06, 0.94, ny);
+        let out = lerpColor(warm, cool, vertMix);
+
+        const ridge1 = 0.24 + 0.5 * Math.sin(nx * Math.PI * 1.05);
+        let dark = smoothstep(0.2, 0.028, Math.abs(ny - ridge1));
+        const ridge2 = 0.52 + 0.2 * Math.sin((nx + 0.08) * Math.PI * 2.2);
+        dark = Math.max(dark, smoothstep(0.14, 0.026, Math.abs(ny - ridge2)) * 0.62);
+        const lateral = smoothstep(0.1, 0.35, nx) * smoothstep(0.92, 0.62, nx);
+        dark *= 0.65 + 0.35 * lateral;
+
+        out.r *= (1 - 0.9 * dark);
+        out.g *= (1 - 0.9 * dark);
+        out.b *= (1 - 0.9 * dark);
+
+        const hotRed = (1 - ny) * smoothstep(0.05, 0.75, nx * (1 - nx) * 4) * 40;
+        const hotCool = ny * (0.4 + nx * 0.6) * 35;
+        out.r = clamp(out.r + hotRed, 0, 255);
+        out.g = clamp(out.g + hotCool * 0.35, 0, 255);
+        out.b = clamp(out.b + hotCool, 0, 255);
+        return out;
+    }
+
+    svg.rgbCss = function (c) {
+        return 'rgb(' + (c.r | 0) + ',' + (c.g | 0) + ',' + (c.b | 0) + ')';
+    };
 
     svg.path = function (ia) {
-
-        let output = "M ";
-        for (var i = 0; i < ia.length; i++) {
-            output += ia[i].x * twrk.res + " " + ia[i].y * twrk.res + " ";
+        let output = 'M ';
+        for (let i = 0; i < ia.length; i++) {
+            output += ia[i].x * twrk.res + ' ' + ia[i].y * twrk.res + ' ';
         }
-        output += "z";
-
+        output += 'z';
         return output;
     };
 
-    svg.makeLayer = function ({ parent, id, x = 0, y = 0 }) {
-        dom[id] = document.createElementNS(svg.nameSpace, "svg");
-        dom[id].id = id;
-        dom[id].style.transform = "translateX(" + (x * twrk.res) + "px) translateY(" + (y * twrk.res) + "px)";
-        parent.appendChild(dom[id]);
+    svg.makeLayer = function ({ parent, id }) {
+        const el = document.createElementNS(svg.nameSpace, 'svg');
+        el.id = id;
+        parent.appendChild(el);
+        return el;
     };
 
-    svg.makeLine = function ({ parent, id, d = "", color = "#ff00ff", stroke = 1, cap = "butt", join = "round" }) {
-        dom[id] = document.createElementNS(svg.nameSpace, "path");
-        dom[id].setAttributeNS(null, "fill", "none");
-        dom[id].setAttributeNS(null, "d", d);
-        dom[id].setAttributeNS(null, "stroke-width", stroke * twrk.res);
-        dom[id].setAttributeNS(null, "stroke", color);
-        dom[id].setAttributeNS(null, "stroke-linecap", cap);
-        dom[id].setAttributeNS(null, "stroke-join", join);
-        dom[id].id = id;
-        parent.appendChild(dom[id]);
+    svg.ensureDefs = function (svgEl) {
+        let d = svgEl.querySelector('defs');
+        if (!d) {
+            d = document.createElementNS(svg.nameSpace, 'defs');
+            svgEl.insertBefore(d, svgEl.firstChild);
+        }
+        return d;
     };
 
-    svg.makeShape = function ({ parent, id, d = "", color = "#ff00ff" }) {
-        dom[id] = document.createElementNS(svg.nameSpace, "path");
-        dom[id].setAttributeNS(null, "fill", color);
-        dom[id].setAttributeNS(null, "d", d);
-        dom[id].id = id;
-        parent.appendChild(dom[id]);
+    svg.addGrainFilter = function (defs) {
+        const f = document.createElementNS(svg.nameSpace, 'filter');
+        f.setAttribute('id', 'molnarGrain');
+        /* Per-shape: grain only inside each box’s bounds, not the full canvas */
+        f.setAttribute('filterUnits', 'objectBoundingBox');
+        f.setAttribute('x', '0');
+        f.setAttribute('y', '0');
+        f.setAttribute('width', '1');
+        f.setAttribute('height', '1');
+        f.setAttribute('color-interpolation-filters', 'sRGB');
+        const t = document.createElementNS(svg.nameSpace, 'feTurbulence');
+        t.setAttribute('type', 'fractalNoise');
+        t.setAttribute('baseFrequency', '0.85');
+        t.setAttribute('numOctaves', '4');
+        t.setAttribute('seed', '11');
+        t.setAttribute('result', 'noise');
+        const m = document.createElementNS(svg.nameSpace, 'feColorMatrix');
+        m.setAttribute('in', 'noise');
+        m.setAttribute('type', 'matrix');
+        m.setAttribute('values', '1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.42 0');
+        m.setAttribute('result', 'grain');
+        const b = document.createElementNS(svg.nameSpace, 'feBlend');
+        b.setAttribute('in', 'SourceGraphic');
+        b.setAttribute('in2', 'grain');
+        b.setAttribute('mode', 'soft-light');
+        b.setAttribute('result', 'blended');
+        const clip = document.createElementNS(svg.nameSpace, 'feComposite');
+        clip.setAttribute('in', 'blended');
+        clip.setAttribute('in2', 'SourceGraphic');
+        clip.setAttribute('operator', 'in');
+        f.appendChild(t);
+        f.appendChild(m);
+        f.appendChild(b);
+        f.appendChild(clip);
+        defs.appendChild(f);
     };
 
+    function copyRgb(c) {
+        return { r: c.r, g: c.g, b: c.b };
+    }
 
-    //DOM
+    svg.createCell = function (defs, parent, domId, square, xpos, ypos, nxC, nyTop, nyBot, cTop, cBot) {
+        const gid = domId + '-grad';
+        const px = xpos * twrk.res;
+        const yTop = (ypos - square / 2) * twrk.res;
+        const yBot = (ypos + square / 2) * twrk.res;
 
-    let dom = {};
+        const lg = document.createElementNS(svg.nameSpace, 'linearGradient');
+        lg.setAttribute('id', gid);
+        lg.setAttribute('gradientUnits', 'userSpaceOnUse');
+        lg.setAttribute('x1', String(px));
+        lg.setAttribute('y1', String(yTop));
+        lg.setAttribute('x2', String(px));
+        lg.setAttribute('y2', String(yBot));
 
-    //stage
-    dom.stage = document.createElement("stage");
-    dom.stage.style.transform = "translateX(" + (twrk.center.x * twrk.res) + "px) translateY(" + (twrk.center.y * twrk.res) + "px)";
-    dom.stage.id = "stage";
-    document.body.appendChild(dom.stage);
+        const s0 = document.createElementNS(svg.nameSpace, 'stop');
+        s0.setAttribute('offset', '0%');
+        s0.setAttribute('stop-color', svg.rgbCss(cTop));
+        const s1 = document.createElementNS(svg.nameSpace, 'stop');
+        s1.setAttribute('offset', '100%');
+        s1.setAttribute('stop-color', svg.rgbCss(cBot));
+        lg.appendChild(s0);
+        lg.appendChild(s1);
+        defs.appendChild(lg);
 
-    //svg layer
-    svg.makeLayer({ parent: dom.stage, id: "svgLayer", x: 0, y: 0 });
+        const half = square / 2;
+        const d = svg.path([
+            { x: xpos - half, y: ypos - half },
+            { x: xpos + half, y: ypos - half },
+            { x: xpos + half, y: ypos + half },
+            { x: xpos - half, y: ypos + half },
+        ]);
+        const p = document.createElementNS(svg.nameSpace, 'path');
+        p.setAttributeNS(null, 'fill', 'url(#' + gid + ')');
+        p.setAttributeNS(null, 'd', d);
+        p.setAttribute('filter', 'url(#molnarGrain)');
+        p.id = domId;
+        parent.appendChild(p);
 
+        return { elGrad: lg, stop0: s0, stop1: s1, elPath: p };
+    };
 
-    //DRAWING
+    function updateCellVisual(c, eased) {
+        const s = lerp(c.sizeFrom, c.sizeTo, eased);
+        const cT = lerpColor(c.cTopFrom, c.cTopTo, eased);
+        const cB = lerpColor(c.cBotFrom, c.cBotTo, eased);
+        const half = s / 2;
+        const d = svg.path([
+            { x: c.xpos - half, y: c.ypos - half },
+            { x: c.xpos + half, y: c.ypos - half },
+            { x: c.xpos + half, y: c.ypos + half },
+            { x: c.xpos - half, y: c.ypos + half },
+        ]);
+        c.elPath.setAttribute('d', d);
+        const px = c.xpos * twrk.res;
+        const yTop = (c.ypos - half) * twrk.res;
+        const yBot = (c.ypos + half) * twrk.res;
+        c.elGrad.setAttribute('x1', String(px));
+        c.elGrad.setAttribute('y1', String(yTop));
+        c.elGrad.setAttribute('x2', String(px));
+        c.elGrad.setAttribute('y2', String(yBot));
+        c.stop0.setAttribute('stop-color', svg.rgbCss(cT));
+        c.stop1.setAttribute('stop-color', svg.rgbCss(cB));
+    }
 
-    let square = 10;
-    let distance = 10;
-    let cells = 10;
-    let offset = -cells / 2 * distance + distance * .5;
-    let colors = ["#f00", "#ff0", "#f0f"];
-    let sizes = [square, square * 0.75, square * .5];
+    function pickRandomSize(sizesArr) {
+        return sizesArr[Math.floor(Math.random() * sizesArr.length)];
+    }
 
-    //nested loop
-    for (let x = 0; x < cells; x++) {
+    function pickDistinctSize(sizesArr, avoid) {
+        if (sizesArr.length < 2) return pickRandomSize(sizesArr);
+        let s = pickRandomSize(sizesArr);
+        for (let g = 0; g < 10 && s === avoid; g++) {
+            s = pickRandomSize(sizesArr);
+        }
+        return s;
+    }
 
-        for (let y = 0; y < cells; y++) {
+    function rollCellTargets(c, sizesArr, jx, jy) {
+        c.sizeFrom = c.sizeTo;
+        c.sizeTo = pickRandomSize(sizesArr);
+        c.cTopFrom = copyRgb(c.cTopTo);
+        c.cBotFrom = copyRgb(c.cBotTo);
+        c.cTopTo = sampleField(clamp(c.nxC + jx, 0, 1), clamp(c.nyTop + jy, 0, 1));
+        c.cBotTo = sampleField(clamp(c.nxC + jx, 0, 1), clamp(c.nyBot + jy, 0, 1));
+    }
 
-            let xpos = offset + x * distance;
-            let ypos = offset + y * distance;
+    const dom = {};
+    dom.stage = document.createElement('stage');
+    dom.stage.id = 'stage';
+    document.querySelector('.molnar-hero-cap').before(dom.stage);
 
-            let diceColor = Math.floor(Math.random() * colors.length);
-            let diceSize = Math.floor(Math.random() * sizes.length);
+    const svgLayer = svg.makeLayer({ parent: dom.stage, id: 'svgLayer' });
+    const defs = svg.ensureDefs(svgLayer);
+    svg.addGrainFilter(defs);
 
-            square = sizes[diceSize];
+    const GRID_N = 14;
+    const distance = 8.2;
+    const baseSquare = 7;
+    const sizes = [baseSquare, baseSquare * 0.74, baseSquare * 0.48];
+    const offset = -GRID_N / 2 * distance + distance * 0.5;
 
-            let path = [
-                { x: xpos - square / 2, y: ypos - square / 2 },
-                { x: xpos + square / 2, y: ypos - square / 2 },
-                { x: xpos + square / 2, y: ypos + square / 2 },
-                { x: xpos - square / 2, y: ypos + square / 2 }
-            ];
+    /** Morph duration equals cycle length so the grid is always in slow motion, no pause between states. */
+    const CYCLE_MS = 4000;
 
-            svg.makeShape({ parent: dom.svgLayer, id: "punkt", cap: "round", stroke: 5, color: colors[diceColor], d: svg.path(path) });
+    const cellStates = [];
+    const SMAX = Math.max.apply(null, sizes);
 
+    const bootJx = (Math.random() - 0.5) * 0.11;
+    const bootJy = (Math.random() - 0.5) * 0.09;
+
+    for (let x = 0; x < GRID_N; x++) {
+        for (let y = 0; y < GRID_N; y++) {
+            const xpos = offset + x * distance;
+            const ypos = offset + y * distance;
+            const nxC = (x + 0.5) / GRID_N;
+            const nyTop = y / GRID_N;
+            const nyBot = (y + 1) / GRID_N;
+            const sizeFrom = pickRandomSize(sizes);
+            const sizeTo = pickDistinctSize(sizes, sizeFrom);
+            const cTopFrom = sampleField(nxC, nyTop);
+            const cBotFrom = sampleField(nxC, nyBot);
+            const cTopTo = sampleField(clamp(nxC + bootJx, 0, 1), clamp(nyTop + bootJy, 0, 1));
+            const cBotTo = sampleField(clamp(nxC + bootJx, 0, 1), clamp(nyBot + bootJy, 0, 1));
+
+            const refs = svg.createCell(
+                defs,
+                svgLayer,
+                'molnar-cell-' + x + '-' + y,
+                sizeFrom,
+                xpos,
+                ypos,
+                nxC,
+                nyTop,
+                nyBot,
+                cTopFrom,
+                cBotFrom
+            );
+
+            cellStates.push({
+                xpos,
+                ypos,
+                nxC,
+                nyTop,
+                nyBot,
+                sizeFrom,
+                sizeTo,
+                cTopFrom: copyRgb(cTopFrom),
+                cTopTo: copyRgb(cTopTo),
+                cBotFrom: copyRgb(cBotFrom),
+                cBotTo: copyRgb(cBotTo),
+                elGrad: refs.elGrad,
+                stop0: refs.stop0,
+                stop1: refs.stop1,
+                elPath: refs.elPath,
+            });
         }
     }
 
-</script>
+    let minPx = Infinity;
+    let minPy = Infinity;
+    let maxPx = -Infinity;
+    let maxPy = -Infinity;
+    for (let x = 0; x < GRID_N; x++) {
+        for (let y = 0; y < GRID_N; y++) {
+            const xpos = offset + x * distance;
+            const ypos = offset + y * distance;
+            minPx = Math.min(minPx, (xpos - SMAX / 2) * twrk.res);
+            maxPx = Math.max(maxPx, (xpos + SMAX / 2) * twrk.res);
+            minPy = Math.min(minPy, (ypos - SMAX / 2) * twrk.res);
+            maxPy = Math.max(maxPy, (ypos + SMAX / 2) * twrk.res);
+        }
+    }
 
+    const pad = 24 * twrk.res;
+    minPx -= pad;
+    maxPx += pad;
+    minPy -= pad;
+    maxPy += pad;
+
+    function applySvgBox() {
+        const vbw = maxPx - minPx;
+        const vbh = maxPy - minPy;
+        svgLayer.setAttribute('viewBox', minPx + ' ' + minPy + ' ' + vbw + ' ' + vbh);
+        svgLayer.setAttribute('width', String(Math.max(200, window.innerWidth)));
+        svgLayer.setAttribute('height', String(Math.max(200, window.innerHeight)));
+        svgLayer.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+    }
+    applySvgBox();
+
+    let reloadAt = performance.now();
+
+    function tick(now) {
+        if (now - reloadAt >= CYCLE_MS) {
+            reloadAt = now;
+            const jx = (Math.random() - 0.5) * 0.11;
+            const jy = (Math.random() - 0.5) * 0.09;
+            for (let i = 0; i < cellStates.length; i++) {
+                rollCellTargets(cellStates[i], sizes, jx, jy);
+            }
+        }
+        const elapsed = now - reloadAt;
+        const k = Math.min(1, elapsed / CYCLE_MS);
+        for (let i = 0; i < cellStates.length; i++) {
+            updateCellVisual(cellStates[i], k);
+        }
+        requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+})();
+</script>
+    <script src="site-nav.js"></script>
+</body>
 </html>

@@ -1,48 +1,43 @@
 <!doctype html>
-<html>
-
+<html lang="en">
 <head>
-
-    <title>Moving Waves</title>
-
     <meta charset="utf-8">
-    <meta name="viewport" content="initial-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Madurai:wght@300&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Lateef&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Corben:wght@700&family=Halant:wght@700&display=swap" rel="stylesheet">
-    <script language="javascript" type="text/javascript" src="simplex-noise.min.js"></script>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Moving Waves — Merlin Zuni Codes</title>
+    <link rel="stylesheet" href="site-shared.css">
+    <script src="simplex-noise.min.js"></script>
     <style>
-        body {
-            margin: 0;
-            padding: 25px 50px;
-            width: 100%;
-            height: 100%;
-            /*font-size: 0; */
-            font-family: sans-serif;
-            color: #fff;
-            background-color: #191919;
+        body.site-body {
+            background: #111;
             user-select: none;
         }
-
-        stage,
-        svg,
-        path {
-            position: fixed;
-            overflow: visible;
-        }
     </style>
-
 </head>
 
-<body>
-    <div>
-        <p><a href="menu.html">« back</a>&nbsp; | &nbsp;<a href="clock-experiment.html">next »</a></p>
-        <h1 style="color:gainsboro">Moving Waves</h1>
-        <p style="color:gainsboro">These waves were created with the magic of perlin noise.</p>
-    </div>    
-</body>
+<body class="site-body">
+    <header class="site-header">
+        <div class="site-header-inner">
+            <a href="index.html" class="site-logo" aria-label="Merlin Zuni Codes — home">
+                <span class="site-logo-line">Merlin</span>
+                <span class="site-logo-line">Zuni</span>
+                <span class="site-logo-line">Codes</span>
+            </a>
+            <nav class="site-nav" aria-label="Experiments">
+            <ul>
+                <li><a href="clock-experiment.html"><div class="menu"><div class="menu-inner">The rotating clock</div></div></a></li>
+                <li><a href="molnar-boxes.html"><div class="menu"><div class="menu-inner">Molnar Boxes</div></div></a></li>
+                <li><a href="particle-waves.html"><div class="menu"><div class="menu-inner">Particle waves</div></div></a></li>
+                <li><a href="moving-waves.html"><div class="menu is-current"><div class="menu-inner">Moving waves</div></div></a></li>
+                <li><a href="moving-grid.html"><div class="menu"><div class="menu-inner">Moving grid</div></div></a></li>
+            </ul>
+        </nav>
+        </div>
+    </header>
+
+    <main class="site-main">
+        <h1>Moving waves</h1>
+        <p>These waves were created with the magic of Perlin noise.</p>
+    </main>
 
 <script>
 
@@ -265,5 +260,6 @@
 
 
 </script>
-
+    <script src="site-nav.js"></script>
+</body>
 </html>

@@ -1,0 +1,491 @@
+/* Shared across experiment pages — matches index typography & nav glass */
+
+@font-face {
+    font-family: 'TBJInterval';
+    src: url('fonts/interval-modern-grid-perfect-monospace-2026-03-23-03-41-07-utc/WOFF/TBJInterval-Bold.woff2') format('woff2'),
+         url('fonts/interval-modern-grid-perfect-monospace-2026-03-23-03-41-07-utc/WOFF/TBJInterval-Bold.woff') format('woff'),
+         url('fonts/interval-modern-grid-perfect-monospace-2026-03-23-03-41-07-utc/WOFF/TBJInterval-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'TBJInterval';
+    src: url('fonts/interval-modern-grid-perfect-monospace-2026-03-23-03-41-07-utc/WOFF/TBJInterval-Light.woff2') format('woff2'),
+         url('fonts/interval-modern-grid-perfect-monospace-2026-03-23-03-41-07-utc/WOFF/TBJInterval-Light.woff') format('woff'),
+         url('fonts/interval-modern-grid-perfect-monospace-2026-03-23-03-41-07-utc/WOFF/TBJInterval-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'TBJInterval';
+    src: url('fonts/interval-modern-grid-perfect-monospace-2026-03-23-03-41-07-utc/WOFF/TBJInterval-Regular.woff2') format('woff2'),
+         url('fonts/interval-modern-grid-perfect-monospace-2026-03-23-03-41-07-utc/WOFF/TBJInterval-Regular.woff') format('woff'),
+         url('fonts/interval-modern-grid-perfect-monospace-2026-03-23-03-41-07-utc/WOFF/TBJInterval-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    --glass-blur:       6px;
+    --glass-tint:       0.005;
+    --glass-brightness: 0.81;
+    --glass-saturate:   0.75;
+    --site-header-pad:  clamp(0.85rem, 2.5vw, 1.35rem);
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* ── Page shell ─────────────────────────────────────────────── */
+body.site-body {
+    margin: 0;
+    min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
+    background: #050505;
+    color: rgba(255, 255, 255, 0.88);
+    font-family: 'TBJInterval', monospace;
+    font-weight: 400;
+    font-size: 1rem;
+    padding: calc(var(--site-header-pad) * 2 + 4rem) clamp(1.25rem, 5vw, 3.5rem) 2.5rem;
+}
+
+.site-main {
+    position: relative;
+    z-index: 1;
+    max-width: 52rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* p5 clock — center canvas in the content column */
+#clock-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 1.5rem 0 2rem;
+}
+
+#clock-container canvas {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.site-main h1 {
+    font-family: 'TBJInterval', monospace;
+    font-weight: 700;
+    font-size: clamp(1.75rem, 4.5vw, 3rem);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    line-height: 1.05;
+    color: #ffffff;
+    margin: 0 0 1rem;
+}
+
+.site-main h2,
+.site-main h3 {
+    font-family: 'TBJInterval', monospace;
+    font-weight: 700;
+    font-size: clamp(1.15rem, 2.5vw, 1.65rem);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: rgba(255, 255, 255, 0.92);
+    margin: 1.75rem 0 0.5rem;
+}
+
+.site-main p {
+    font-family: 'TBJInterval', monospace;
+    font-weight: 300;
+    font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.72);
+    margin: 0 0 1rem;
+}
+
+.site-main a {
+    color: #f04438;
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+}
+
+.site-main a:hover {
+    color: #ff6b62;
+}
+
+/* ── Fixed header — logo (left) + single-row glass nav (right) ─ */
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: var(--site-header-pad) clamp(1rem, 5vw, 4rem);
+    background: linear-gradient(
+        180deg,
+        rgba(5, 5, 5, 0.97) 0%,
+        rgba(5, 5, 5, 0.9) 60%,
+        rgba(5, 5, 5, 0) 100%
+    );
+    pointer-events: none;
+}
+
+.site-header * {
+    pointer-events: auto;
+}
+
+.site-header-inner {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: flex-end;
+    justify-content: flex-start;
+    gap: clamp(0.6rem, 2vw, 1.25rem);
+    max-width: 100%;
+}
+
+/* Mini wordmark — same three-line stack as index, scaled down */
+.site-logo {
+    flex-shrink: 0;
+    align-self: flex-start;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0;
+    margin: 0;
+    padding: 0.15em 0.35em 0.2em 0;
+    text-decoration: none;
+    font-family: 'TBJInterval', monospace;
+    font-weight: 700;
+    font-size: clamp(0.48rem, 1.05vw, 0.72rem);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    line-height: 0.92;
+    color: #ffffff;
+    text-shadow: 0 0 24px rgba(255, 255, 255, 0.08);
+    transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.site-logo:hover {
+    color: rgba(255, 255, 255, 0.88);
+    opacity: 0.95;
+}
+
+.site-logo-line {
+    display: block;
+    white-space: nowrap;
+}
+
+/* Scroll + fade live on the <nav class="site-nav"> element */
+nav.site-nav {
+    flex: 1;
+    min-width: 0;
+    position: relative;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    cursor: grab;
+    /* Hide native scrollbar — scrub via drag / trackpad / touch */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+nav.site-nav::-webkit-scrollbar {
+    display: none;
+}
+
+nav.site-nav.site-nav--dragging {
+    cursor: grabbing;
+    user-select: none;
+}
+
+/* Right-edge fade when content overflows (hidden when scrolled to end) */
+nav.site-nav::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: clamp(2.5rem, 8vw, 4rem);
+    pointer-events: none;
+    z-index: 4;
+    background: linear-gradient(
+        to left,
+        rgba(5, 5, 5, 0.98) 0%,
+        rgba(5, 5, 5, 0.5) 45%,
+        rgba(5, 5, 5, 0) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+nav.site-nav.site-nav--overflow:not(.site-nav--end)::after {
+    opacity: 1;
+}
+
+nav.site-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0.12rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: flex-end;
+    align-content: flex-end;
+    gap: clamp(0.4rem, 1.5vw, 0.75rem);
+    width: max-content;
+    min-height: min-content;
+}
+
+nav.site-nav ul li {
+    flex: 0 0 auto;
+    display: block;
+}
+
+nav.site-nav ul li a {
+    text-decoration: none;
+    display: block;
+}
+
+.site-nav .menu {
+    font-family: 'TBJInterval', monospace;
+    font-weight: 400;
+    font-size: clamp(0.5rem, 1.35vw, 0.88rem);
+    text-transform: uppercase;
+    letter-spacing: 0;
+    color: rgba(255, 255, 255, 0.75);
+    padding: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    border-left: 1px solid rgba(255, 255, 255, 0.18);
+    border-right: 1px solid rgba(255, 255, 255, 0.18);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 0;
+    background: rgba(255, 255, 255, var(--glass-tint));
+    backdrop-filter: blur(var(--glass-blur)) brightness(var(--glass-brightness))
+        saturate(var(--glass-saturate));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) brightness(var(--glass-brightness))
+        saturate(var(--glass-saturate));
+    position: relative;
+    display: inline-block;
+    white-space: nowrap;
+    transition: color 0.22s ease, background 0.22s ease;
+}
+
+.site-nav .menu:hover {
+    --glass-tint: 0.07;
+}
+
+.site-nav .menu:hover:not(.is-current) {
+    color: #ffffff;
+}
+
+/* Active page — inverted: dark text on near-white fill, dark grey borders */
+.site-nav .menu.is-current {
+    --glass-tint: 0;
+    color: #1a1a1a;
+    background: rgba(242, 242, 240, 0.94);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-color: #3a3a3a;
+}
+
+.site-nav .menu.is-current:hover {
+    color: #1a1a1a;
+    background: rgba(235, 235, 232, 0.98);
+}
+
+.site-nav .menu.is-current .char-cell:not(.bracket-cell) {
+    color: inherit;
+    text-decoration: none;
+}
+
+.site-nav .menu.is-current .char-cell {
+    border-right-color: #3a3a3a;
+}
+
+.site-nav .menu.is-current .bracket-cell {
+    color: #f04438;
+    width: var(--cell-w);
+    border-right-width: 1px;
+    border-right-color: #3a3a3a;
+    transition: width 0.22s ease;
+}
+
+.site-nav .menu-inner {
+    display: inline-flex;
+    align-items: stretch;
+    position: relative;
+    z-index: 1;
+}
+
+.site-nav .char-cell {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.42em 0;
+    border-right: 1px solid rgba(255, 255, 255, 0.18);
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.site-nav .bracket-cell {
+    width: 0;
+    overflow: hidden;
+    color: #f04438;
+    border-right-width: 0;
+    transition: width 0.22s ease, border-right-width 0s 0.11s;
+}
+
+.site-nav .menu:hover .bracket-cell {
+    width: var(--cell-w);
+    border-right-width: 1px;
+    transition: width 0.22s ease;
+}
+
+/* Match original experiment canvases — full-viewport fixed layers */
+stage,
+svg,
+path {
+    position: fixed;
+    overflow: visible;
+}
+
+@media (max-width: 960px) {
+    .site-nav .menu {
+        font-size: clamp(0.45rem, 2.8vw, 0.75rem);
+    }
+
+    .site-logo {
+        font-size: clamp(0.42rem, 2.5vw, 0.62rem);
+    }
+}
+
+/* ═══ Rotating clock — Bauhaus / constructivist (header nav unchanged) ═══ */
+.page-clock-bauhaus.site-body {
+    background: #ece8e2;
+    color: #121214;
+}
+
+.page-clock-bauhaus.site-body .site-main--clock-bauhaus {
+    max-width: 46rem;
+}
+
+.page-clock-bauhaus .site-main--clock-bauhaus h1 {
+    color: #121214;
+    letter-spacing: 0.07em;
+    border-left: 14px solid #1c3878;
+    padding-left: 1rem;
+    margin-bottom: 0.65rem;
+    text-shadow: none;
+}
+
+.page-clock-bauhaus .site-main--clock-bauhaus .bauhaus-lead {
+    color: #2c2926;
+    max-width: 38rem;
+    font-weight: 400;
+    margin-bottom: 0.5rem;
+    line-height: 1.55;
+}
+
+.page-clock-bauhaus .site-main--clock-bauhaus a {
+    color: #c43d32;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 2px solid #d4af2e;
+}
+
+.page-clock-bauhaus .site-main--clock-bauhaus a:hover {
+    color: #1c3878;
+    border-bottom-color: #1c3878;
+}
+
+.page-clock-bauhaus .site-main--clock-bauhaus code {
+    background: #fff9e6;
+    color: #121214;
+    padding: 0.1em 0.38em;
+    border: 1px solid #121214;
+    font-size: 0.88em;
+}
+
+.page-clock-bauhaus #clock-container.clock-stage {
+    margin: 2rem auto 2.25rem;
+    padding: 0;
+    background: transparent;
+    box-sizing: border-box;
+}
+
+.page-clock-bauhaus #clock-container.clock-stage canvas {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    vertical-align: top;
+}
+
+.page-clock-bauhaus .bauhaus-panels {
+    border: 2px solid #121214;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 2.5rem;
+}
+
+.page-clock-bauhaus .bauhaus-panel {
+    padding: 1.15rem 1.35rem;
+    border-bottom: 2px solid #121214;
+    background: #faf7f3;
+}
+
+.page-clock-bauhaus .bauhaus-panel:last-child {
+    border-bottom: none;
+}
+
+.page-clock-bauhaus .bauhaus-panel--coral {
+    border-left: 12px solid #e24e42;
+    background: linear-gradient(90deg, rgba(226, 78, 66, 0.1) 0%, #faf7f3 38%);
+}
+
+.page-clock-bauhaus .bauhaus-panel--ink {
+    border-left: 12px solid #121214;
+}
+
+.page-clock-bauhaus .bauhaus-panel--yellow {
+    border-left: 12px solid #d4af2e;
+    background: linear-gradient(90deg, rgba(212, 175, 46, 0.14) 0%, #faf7f3 35%);
+}
+
+.page-clock-bauhaus .bauhaus-panel--blue {
+    border-left: 12px solid #1c3878;
+    background: linear-gradient(90deg, rgba(28, 56, 120, 0.08) 0%, #faf7f3 38%);
+}
+
+.page-clock-bauhaus .bauhaus-panel h2 {
+    color: #121214;
+    font-size: clamp(0.82rem, 2vw, 1.05rem);
+    margin: 0 0 0.45rem;
+    letter-spacing: 0.14em;
+    font-weight: 700;
+}
+
+.page-clock-bauhaus .bauhaus-panel p {
+    color: #3d3a38;
+    margin: 0;
+    font-weight: 300;
+    line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+    .page-clock-bauhaus #clock-container.clock-stage {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
