@@ -1,5 +1,7 @@
 # Merlin Zuni Codes
 
+### [→ merlinzuni.github.io/merlin-zuni-codes](https://merlinzuni.github.io/merlin-zuni-codes/)
+
 A portal to a collection of creative coding experiments made while studying at the [Zürcher Hochschule der Künste (ZHdK)](https://www.zhdk.ch/). Each piece explores a different aspect of generative visuals, motion, and interaction built entirely in the browser.
 
 ---
