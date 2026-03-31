@@ -2,88 +2,63 @@
 
 ### [→ merlinzuni.github.io/merlin-zuni-codes](https://merlinzuni.github.io/merlin-zuni-codes/)
 
-A portal to a collection of creative coding experiments made while studying at the [Zürcher Hochschule der Künste (ZHdK)](https://www.zhdk.ch/). Each piece explores a different aspect of generative visuals, motion, and interaction built entirely in the browser.
+A collection of creative coding experiments made while studying at the [Zürcher Hochschule der Künste (ZHdK)](https://www.zhdk.ch/). Each piece explores a different idea in generative visuals, motion, and interaction — built entirely in the browser with no frameworks or build tools.
 
 ---
 
 ## Experiments
 
-| Page | Description |
-|---|---|
-| `clock-experiment.html` | A rotating typographic clock |
-| `molnar-boxes.html` | Generative compositions inspired by Vera Molnár |
-| `particle-waves.html` | Particle systems driven by wave functions |
-| `moving-waves.html` | Animated wave fields |
-| `moving-grid.html` | Rotation / clock study (same p5 sketch as the clock page) |
+### [The Rotating Clock](clock-experiment.html)
+A Bauhaus-influenced analog clock built with [p5.js](https://p5js.org/). Three hands represent hours (black), minutes (yellow), and seconds (blue), each leaving behind a fading quarter-turn arc trail. The trails step inward across concentric rings and fade both with age and towards the centre. When the hour hand enters the black bottom-right quadrant of the dial, the hand and its traces turn white for visibility. The clock displays the viewer's local time and city, fetched via IP geolocation with a timezone fallback.
 
-Experiment pages share **`site-shared.css`** (TBJ Interval + glass nav strip) and **`site-nav.js`** (character-cell link layout to match the index).
+### [Molnar Boxes](molnar-boxes.html)
+A generative grid of rectangles inspired by the systematic variation work of [Vera Molnár](https://en.wikipedia.org/wiki/Vera_Moln%C3%A1r). A 14×14 field of SVG shapes continuously animates between random size and color states every four seconds, interpolating smoothly at constant speed. Each cell carries a vertical gradient sampled from a procedural warm-to-cool color field, with a film-grain SVG filter clipped tightly to each shape.
 
----
+### [Particle Waves](particle-waves.html)
+A static generative field of short line strokes placed using simplex noise. Thousands of red and teal lines are distributed across the canvas using `noise2D` values to vary their vertical position, building up a layered wave-like texture.
 
-## How it was made
+### [Moving Waves](moving-waves.html)
+A live animated flow field using [simplex-noise.js](https://github.com/jwagner/simplex-noise.js). Two layers of rotating line strokes are updated every frame via `requestAnimationFrame`, driven by 3D simplex noise in `(x, y, time)` space. The result is a continuously shifting field of red and teal lines that ripple and breathe over time.
 
-### Particle Animation
-
-The background is a real-time particle system written in vanilla JavaScript using the [p5.js](https://p5js.org/) canvas and [simplex-noise.js](https://github.com/jwagner/simplex-noise.js) for smooth, organic movement.
-
-Each particle is spawned near the centre of the screen and drifts outward along a spiral path shaped by two forces working together: a **tangential spin** that pulls particles in a circular arc, and a **3D simplex noise flow field** that introduces subtle organic turbulence. Particles vary in size and opacity based on a `depth` value assigned at birth — small, dim particles read as distant; large, brighter ones read as close — giving the field a sense of three-dimensional depth without any blur or shadow.
-
-Particles fade in and out over their lifetime using a sine curve, so they swell smoothly into view and dissolve again. Three colours are drawn from a palette — white, warm sand (`#c9a98f`), and warm yellow (`#fbde6d`) — weighted so white dominates and the warm tones appear as occasional subtle accents.
-
-For performance, particles are grouped into **alpha bins** before drawing. Instead of one GPU draw call per particle, all particles sharing a similar opacity level are batched into a single `beginPath / fill` call. With 800 particles across 3 colours and 10 opacity levels, the renderer makes at most 30 draw calls per frame — compared to the 800+ that a naïve implementation would require. `shadowBlur` is not used; all depth is achieved through size and opacity alone, avoiding the most expensive Canvas 2D operation.
+### [Moving Grid Systems](moving-grid.html)
+A typographic and generative piece referencing the grid-systems tradition of Josef Müller-Brockmann. A white dot grid is centred on an orange background; each dot stretches into a line radiating outward in a wave that expands from a randomly chosen origin — centre, corners, top-to-bottom, or spinning. The intensity scales toward the edges so outer dots stretch further. Moving the mouse creates a calm zone that suppresses the effect nearby. The wave origin switches smoothly every five seconds. Title and description are set in English and German.
 
 ---
 
-### Glass Effect
+## Shared system
 
-The frosted glass panels behind the navigation links are built entirely with **CSS `backdrop-filter`**. This browser-native property composites everything rendered beneath an element — including live canvas animations — and applies real-time filters to it.
+All experiment pages share:
 
-Three properties work together:
-
-- `blur()` — frosts the background behind the element, creating the out-of-focus glass look
-- `brightness()` and `saturate()` — tone the glass to feel slightly darkened and desaturated, as if light is passing through a tinted surface
-- `background: rgba(255, 255, 255, tint)` — adds a very faint white surface tint
-
-A lens distortion effect is layered on top using an **SVG displacement filter** (`feTurbulence` + `feDisplacementMap`). This generates a noise field and uses it to warp pixel positions across the element, simulating the slight optical distortion of thick glass or crystal.
-
-All glass parameters are exposed as **CSS custom properties** (`--glass-blur`, `--glass-tint`, `--glass-brightness`, `--glass-saturate`) and can be tuned live from the on-screen dev panel.
-
----
-
-### Typography
-
-The typeface used throughout is **[TRT Interval](https://supply.family/shop/trt-interval/?srsltid=AfmBOortz47mQSxFpDy17U3jn2h8cOk0G54wLkY6eKFDMVEGp0mbBj5l)**, designed by The Rodina and distributed by [Supply Family](https://supply.family/).
-
-TRT Interval is a strict monospaced grotesque where every character — letters, numbers, and punctuation — occupies exactly the same width. The grid-perfect spacing makes it well suited to the column-based link layout on this page, where each letter sits centred in its own cell and words are separated by empty cells that preserve the rhythm of the grid.
-
-Three weights are used: **Bold** for the title and link labels, **Light** for the subtitle, and **Regular** for navigation text.
+- **`site-shared.css`** — base reset, TBJInterval font stack, fixed glass header, `.site-main` typography
+- **`site-nav.js`** — builds the character-cell navigation (each letter in its own bordered cell, `{` `}` brackets on hover/active), handles horizontal scroll, drag, and auto-scrolls the active item into view
 
 ---
 
 ## Stack
 
 - Vanilla HTML, CSS, and JavaScript — no build tools, no frameworks
-- [p5.js](https://p5js.org/) — canvas API wrapper for the animation loop
-- [simplex-noise.js](https://github.com/jwagner/simplex-noise.js) — smooth noise for the flow field
-- [lil-gui](https://lil-gui.georgealways.com/) — lightweight dev panel for tweaking parameters at runtime
-- CSS `backdrop-filter` — native browser glass effect
-- SVG filters (`feTurbulence` / `feDisplacementMap`) — lens distortion
+- [p5.js](https://p5js.org/) — canvas drawing for the clock
+- [simplex-noise.js](https://github.com/jwagner/simplex-noise.js) — flow fields for the wave experiments
+- SVG — animated grid for Molnar Boxes (gradients, grain filter, `requestAnimationFrame`)
+- Canvas 2D — dot-grid stretch animation for Moving Grid
+- CSS `backdrop-filter` — frosted glass nav panels
+- **TBJInterval** by The Rodina / [Supply Family](https://supply.family/) — monospaced grotesque used throughout
 
 ---
 
 ## Running locally
 
-No build step required. Serve the folder with any static HTTP server:
+No build step required. Serve the folder with any static server:
 
 ```bash
 python3 -m http.server 8080
 ```
 
-Then open `http://localhost:8080` in your browser.
+Then open `http://localhost:8080`.
 
 ---
 
 ## License
 
 Code is open source under the [MIT License](https://opensource.org/licenses/MIT).  
-The TRT Interval font files are licensed separately — see the [Supply Family shop](https://supply.family/shop/trt-interval/) for details.
+The TBJInterval font files are licensed separately — see the [Supply Family shop](https://supply.family/) for details.
