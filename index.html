@@ -495,7 +495,7 @@
         if (typeof lil === 'undefined') { console.warn('lil-gui not loaded'); return; }
 
         const gui = new lil.GUI({ title: 'Dev Panel', width: 280 });
-        gui.hide(); // hidden by default — call gui.show() in the console to open
+        gui.domElement.style.display = 'none'; // hidden — run: gui.domElement.style.display='' to open
 
         // ─ Particle Animation ────────────────────────────────────
         const anim = gui.addFolder('Particle Animation');
