@@ -1,24 +1,577 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Merlin Zuni Codes</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Madurai:wght@300&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Corben:wght@700&family=Halant:wght@700&display=swap" rel="stylesheet">
-    <script src="p5.min.js" async></script>
+    <style>
+        /* ── Local font: TBJ Interval ────────────────────────────── */
+        @font-face {
+            font-family: 'TBJInterval';
+            src: url('fonts/interval-modern-grid-perfect-monospace-2026-03-23-03-41-07-utc/WOFF/TBJInterval-Bold.woff2') format('woff2'),
+                 url('fonts/interval-modern-grid-perfect-monospace-2026-03-23-03-41-07-utc/WOFF/TBJInterval-Bold.woff') format('woff'),
+                 url('fonts/interval-modern-grid-perfect-monospace-2026-03-23-03-41-07-utc/WOFF/TBJInterval-Bold.ttf') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'TBJInterval';
+            src: url('fonts/interval-modern-grid-perfect-monospace-2026-03-23-03-41-07-utc/WOFF/TBJInterval-Light.woff2') format('woff2'),
+                 url('fonts/interval-modern-grid-perfect-monospace-2026-03-23-03-41-07-utc/WOFF/TBJInterval-Light.woff') format('woff'),
+                 url('fonts/interval-modern-grid-perfect-monospace-2026-03-23-03-41-07-utc/WOFF/TBJInterval-Light.ttf') format('truetype');
+            font-weight: 300;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'TBJInterval';
+            src: url('fonts/interval-modern-grid-perfect-monospace-2026-03-23-03-41-07-utc/WOFF/TBJInterval-Regular.woff2') format('woff2'),
+                 url('fonts/interval-modern-grid-perfect-monospace-2026-03-23-03-41-07-utc/WOFF/TBJInterval-Regular.woff') format('woff'),
+                 url('fonts/interval-modern-grid-perfect-monospace-2026-03-23-03-41-07-utc/WOFF/TBJInterval-Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
 
+        /* ── Glass CSS variables ─────────────────────────────────── */
+        :root {
+            --glass-blur:       6px;
+            --glass-tint:       0.005;
+            --glass-brightness: 0.81;
+            --glass-saturate:   0.75;
+        }
+
+        /* ── Reset ───────────────────────────────────────────────── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            width: 100%;
+            background: #050505;
+            overflow-x: hidden;
+        }
+
+        /* ── Fixed dust texture — sits beneath the canvas ───────── */
+        #bg-image {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background-image: url('assets/bg-dust.png');
+            background-size: cover;
+            background-position: center top;
+            background-repeat: no-repeat;
+            pointer-events: none;
+        }
+
+        /* ── Canvas background ───────────────────────────────────── */
+        #bg-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            mix-blend-mode: screen;
+        }
+
+        /* ── Fixed header — title + subtitle stay in place ───────── */
+        .page-header {
+            position: fixed;
+            left: clamp(2rem, 8vw, 7rem);
+            top: clamp(2rem, 6vh, 4.5rem);  /* near the top with breathing room */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        /* ── Title ───────────────────────────────────────────────── */
+        h1 {
+            font-family: 'TBJInterval', monospace;
+            font-weight: 700;
+            /* grows with viewport but caps early — stops overlap at large sizes */
+            font-size: clamp(3.5rem, 7vw, 5.6rem);
+            text-transform: uppercase;
+            color: #ffffff;
+            letter-spacing: 0.04em;
+            line-height: 0.93;          /* tight — uppercase has no descenders */
+            text-align: left;
+            margin-bottom: 0.35em;
+            text-shadow: 0 0 80px rgba(255,255,255,0.12);
+        }
+
+        /* ── Subtitle ────────────────────────────────────────────── */
+        .subtitle {
+            font-family: 'TBJInterval', monospace;
+            font-weight: 300;
+            font-size: clamp(1rem, 1.8vw, 1.3rem);
+            color: #f04438;
+            mix-blend-mode: var(--subtitle-blend, difference);
+            letter-spacing: 0.22em;
+            line-height: 1.1;
+            text-transform: uppercase;
+            text-align: left;
+        }
+
+        /* ── Scrollable section — links scroll OVER the header ───── */
+        /* z-index: 20 → liquidGL renderer auto-sets to 19, text at 20 */
+        .scroll-main {
+            position: relative;
+            z-index: 20;
+            min-height: 180vh;      /* enough room to scroll */
+            padding-top: 65vh;      /* links start in the lower viewport */
+            padding-left: clamp(2rem, 8vw, 7rem);
+            padding-right: clamp(2rem, 5vw, 5rem);
+            padding-bottom: 20vh;
+        }
+
+        /* ── Nav — indented to ~1/3 on desktop ───────────────────── */
+        nav {
+            margin-left: clamp(0px, calc(33vw - clamp(2rem, 8vw, 7rem)), 28rem);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            align-items: flex-start;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            display: block;
+        }
+
+        /* ── Menu link — CSS backdrop-filter glass ───────────────── */
+        .menu {
+            font-family: 'TBJInterval', monospace;
+            font-weight: 400;
+            font-size: clamp(1.76rem, 4.48vw, 2.48rem);
+            text-transform: uppercase;
+            letter-spacing: 0;
+            color: rgba(255,255,255,0.75);
+            padding: 0;
+            border-top:  1px solid rgba(255,255,255,0.18);
+            border-left: 1px solid rgba(255,255,255,0.18);
+            border-right: none;
+            border-bottom: none;
+            border-radius: 0;
+            background: rgba(255,255,255,var(--glass-tint));
+            backdrop-filter:         blur(var(--glass-blur)) brightness(var(--glass-brightness)) saturate(var(--glass-saturate));
+            -webkit-backdrop-filter: blur(var(--glass-blur)) brightness(var(--glass-brightness)) saturate(var(--glass-saturate));
+            position: relative;
+            display: inline-block;
+            white-space: nowrap;
+            transition: color 0.22s ease,
+                        background 0.22s ease,
+                        backdrop-filter 0.22s ease;
+        }
+
+        .menu:hover {
+            --glass-tint: 0.07;
+        }
+
+        /* Lens distortion — applied to the whole element via SVG filter */
+        .menu-distort {
+            filter: url(#glass-distort);
+        }
+
+        nav ul li:last-child .menu {
+            border-bottom: 1px solid rgba(255,255,255,0.18);
+        }
+
+        .menu:hover { color: #ffffff; }
+
+        /* ── Menu inner — text layer ─────────────────────────────── */
+        .menu-inner {
+            display: inline-flex;
+            align-items: stretch;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── Character cells ─────────────────────────────────────── */
+        .char-cell {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.42em 0;
+            border-right: 1px solid rgba(255,255,255,0.18);
+            flex-shrink: 0;
+            line-height: 1;
+        }
+
+        /* ── Bracket cells — hidden until hover ─────────────────── */
+        .bracket-cell {
+            width: 0;
+            overflow: hidden;
+            color: #f04438;
+            border-right-width: 0;
+            transition: width 0.22s ease, border-right-width 0s 0.11s;
+        }
+
+        /* On hover, expand to one char-cell width (set per row in JS) */
+        .menu:hover .bracket-cell {
+            width: var(--cell-w);
+            border-right-width: 1px;
+            transition: width 0.22s ease;
+        }
+
+        /* ── Responsive ──────────────────────────────────────────── */
+        @media (max-width: 960px) {
+            nav { margin-left: 0; }
+            .menu { font-size: clamp(1.3rem, 3.6vw, 2.48rem); }
+        }
+
+        @media (max-width: 600px) {
+            .page-header {
+                height: auto;
+                top: 2.5rem;
+                justify-content: flex-start;
+            }
+            .scroll-main {
+                padding-top: 52vh;
+                padding-left: 1.5rem;
+                padding-right: 1.5rem;
+            }
+            h1 { font-size: clamp(2.4rem, 9vw, 3.5rem); text-align: left; }
+            .subtitle { font-size: clamp(0.8rem, 3vw, 1rem); text-align: left; }
+            nav {
+                margin-left: 0;
+                max-width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            .menu { font-size: clamp(0.95rem, 4.2vw, 1.5rem); }
+        }
+    </style>
 </head>
 
 <body>
-    <p>Merlin Zuni Codes</p>
-    <ul>
-        <li><a href="clock-experiment.html"><div class="menu">The rotating clock</div></a></li>
-        <li><a href="molnar-boxes.html"><div class="menu">Molnar Boxes</div></a></li>
-        <li><a href="particle-waves.html"><div class="menu">Particle waves</div></a></li>
-        <li><a href="moving-waves.html"><div class="menu">Moving waves</div></a></li>
+    <!-- Particle animation background -->
+    <!-- SVG displacement filter for glass lens distortion -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+        <defs>
+            <filter id="glass-distort" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+                <feTurbulence id="glass-turbulence" type="fractalNoise" baseFrequency="0.012 0.018" numOctaves="3" seed="5" result="noise"/>
+                <feDisplacementMap id="glass-displace" in="SourceGraphic" in2="noise" scale="20" xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+        </defs>
+    </svg>
 
-      </ul>
-           
+    <div id="bg-image" data-liquid-ignore></div>
+    <canvas id="bg-canvas" data-liquid-ignore></canvas>
+
+    <!-- Fixed title + subtitle -->
+    <header class="page-header">
+        <h1>Merlin<br>Zuni<br>Codes</h1>
+        <p class="subtitle">experiments in code &amp; motion</p>
+    </header>
+
+    <!-- Scrollable project links — scroll over the fixed header -->
+    <main class="scroll-main">
+        <nav>
+            <ul>
+                <li><a href="clock-experiment.html"><div class="menu"><div class="menu-inner">The rotating clock</div></div></a></li>
+                <li><a href="molnar-boxes.html"><div class="menu"><div class="menu-inner">Molnar Boxes</div></div></a></li>
+                <li><a href="particle-waves.html"><div class="menu"><div class="menu-inner">Particle waves</div></div></a></li>
+                <li><a href="moving-waves.html"><div class="menu"><div class="menu-inner">Moving waves</div></div></a></li>
+            </ul>
+        </nav>
+    </main>
+
+    <!-- ── Scripts ──────────────────────────────────────────────── -->
+
+    <!-- 1. Simplex noise (sync — needed before animation loop) -->
+    <script src="simplex-noise.min.js"></script>
+
+    <!-- 2. Particle animation — reads from ANIM_PARAMS for live control -->
+    <script>
+    window.ANIM_PARAMS = {
+        count:        800,
+        speed:        1.2,
+        noiseScale:   0.0006,
+        timeSpeed:    0.00065,
+        fade:         0.265,
+        spinStrength: 0.7,
+    };
+
+    (function () {
+        const canvas = document.getElementById('bg-canvas');
+        const ctx    = canvas.getContext('2d');
+
+        let n2;
+        if (typeof SimplexNoise === 'function') {
+            try {
+                const sn = new SimplexNoise();
+                n2 = (x, y) => sn.noise2D ? sn.noise2D(x, y) : sn.noise(x, y);
+            } catch(e) { n2 = () => 0; }
+        } else { n2 = () => 0; }
+
+        let W, H, CX, CY, MAX_R;
+        function resize() {
+            W  = canvas.width  = window.innerWidth;
+            H  = canvas.height = window.innerHeight;
+            CX = W / 2; CY = H / 2;
+            MAX_R = Math.sqrt(CX * CX + CY * CY);
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Particle color palette — weighted towards white
+        // Weights: white 65%, warm sand 20%, warm yellow 15%
+        const PALETTE       = ['#ffffff', '#c9a98f', '#fbde6d'];
+        const PALETTE_ROLL  = [0.65, 0.85, 1.0]; // cumulative thresholds
+        function pickColor() {
+            const r = Math.random();
+            for (let i = 0; i < PALETTE_ROLL.length; i++) {
+                if (r < PALETTE_ROLL[i]) return i;
+            }
+            return 0;
+        }
+
+        class Particle {
+            constructor(scattered) { this.init(scattered); }
+            init(scattered = false) {
+                this.depth     = Math.random();
+                this.size      = 0.3 + this.depth * this.depth * 2.2;
+                this.baseAlpha = 0.07 + this.depth * 0.52;
+                this.speedMult = 0.3  + this.depth * 1.1;
+                this.colorIdx  = pickColor();
+                const angle = Math.random() * Math.PI * 2;
+                const r = scattered
+                    ? Math.random() * MAX_R * 0.85
+                    : Math.random() * MAX_R * 0.12;
+                this.x = CX + Math.cos(angle) * r;
+                this.y = CY + Math.sin(angle) * r;
+                this.life    = scattered ? (Math.random() * 300) | 0 : 0;
+                this.maxLife = 280 + (Math.random() * 420) | 0;
+                this.drawAlpha = 0;
+            }
+            update(t) {
+                const P  = window.ANIM_PARAMS;
+                const dx = this.x - CX, dy = this.y - CY;
+                const dist = Math.sqrt(dx*dx + dy*dy) || 0.001;
+                const ox = dx / dist, oy = dy / dist;
+                const spinW = Math.max(0.08, P.spinStrength - (dist / MAX_R) * 0.65);
+                const nv = n2(this.x * P.noiseScale, this.y * P.noiseScale + t) * Math.PI * 2.5;
+                const spd = P.speed * this.speedMult;
+                this.x += (ox*(1-spinW) + (-oy)*spinW + Math.cos(nv)*0.4) * spd;
+                this.y += (oy*(1-spinW) +   ox *spinW + Math.sin(nv)*0.4) * spd;
+                this.life++;
+                this.drawAlpha = this.baseAlpha * Math.sin((this.life / this.maxLife) * Math.PI);
+                if (this.life >= this.maxLife || dist > MAX_R * 1.05) this.init(false);
+            }
+        }
+
+        let particles = [];
+
+        // Groups keyed by [colorIdx][alphaIdx] — 3 colors × 10 bins = 30 draw calls max
+        const COLORS = PALETTE.length;
+        const BINS   = 10;
+        const groups = Array.from({ length: COLORS }, () =>
+            Array.from({ length: BINS }, () => [])
+        );
+        const BIN_ALPHA = Array.from({ length: BINS }, (_, i) => (i + 0.5) / BINS);
+
+        function buildPool(count, scattered) {
+            particles = Array.from({ length: count }, () => new Particle(scattered));
+        }
+        buildPool(window.ANIM_PARAMS.count, true);
+        window._buildPool = buildPool;
+
+        let t = 0;
+
+        function loop() {
+            const P = window.ANIM_PARAMS;
+
+            ctx.fillStyle = `rgba(5,5,5,${P.fade})`;
+            ctx.fillRect(0, 0, W, H);
+
+            // Clear all groups (reuse arrays = zero allocation)
+            for (let c = 0; c < COLORS; c++)
+                for (let i = 0; i < BINS; i++) groups[c][i].length = 0;
+
+            // Update and bin each particle by color + alpha
+            for (const p of particles) {
+                p.update(t);
+                const bin = Math.min(BINS - 1, (p.drawAlpha * BINS) | 0);
+                groups[p.colorIdx][bin].push(p);
+            }
+
+            // One beginPath/fill per [color × alpha] bucket — still very fast
+            for (let c = 0; c < COLORS; c++) {
+                ctx.fillStyle = PALETTE[c];
+                for (let i = 0; i < BINS; i++) {
+                    const grp = groups[c][i];
+                    if (!grp.length) continue;
+                    ctx.globalAlpha = BIN_ALPHA[i];
+                    ctx.beginPath();
+                    for (const p of grp) {
+                        ctx.moveTo(p.x + p.size, p.y);
+                        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    }
+                    ctx.fill();
+                }
+            }
+            ctx.globalAlpha = 1;
+
+            t += P.timeSpeed;
+            requestAnimationFrame(loop);
+        }
+
+        loop();
+    })();
+    </script>
+
+    <!-- 3. Character-cell builder — targets .menu-inner -->
+    <script>
+    (function () {
+        const ruler = document.createElement('canvas').getContext('2d');
+
+        window.buildCells = function buildCells() {
+            document.querySelectorAll('.menu-inner').forEach(el => {
+                if (!el.dataset.origText) el.dataset.origText = el.textContent.trim();
+                const text = el.dataset.origText;
+                const cs         = window.getComputedStyle(el.closest('.menu') || el);
+                const fontSize   = parseFloat(cs.fontSize);
+                const fontWeight = cs.fontWeight;
+                const fontFamily = cs.fontFamily;
+                ruler.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
+                const charW = ruler.measureText('M').width;
+                const cellW = Math.round(charW + fontSize * 0.28);
+
+                // Expose cell width as a CSS variable so the hover rule can use it
+                el.style.setProperty('--cell-w', cellW + 'px');
+
+                const cells = [...text].map(ch =>
+                    `<span class="char-cell" style="width:${cellW}px">${ch === ' ' ? '' : ch}</span>`
+                ).join('');
+
+                // Bracket cells get no inline width — CSS drives them via --cell-w
+                el.innerHTML =
+                    `<span class="char-cell bracket-cell bracket-open">{</span>` +
+                    cells +
+                    `<span class="char-cell bracket-cell bracket-close">}</span>`;
+            });
+        };
+
+        document.fonts.ready.then(window.buildCells);
+
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(window.buildCells, 120);
+        });
+    })();
+    </script>
+
+    <!-- 4. Dev panel -->
+    <script src="lil-gui.min.js" defer></script>
+    <script defer>
+    window.addEventListener('load', function () {
+        // Build char cells once fonts are ready
+        document.fonts.ready.then(() => {
+            window.buildCells && window.buildCells();
+        });
+
+        /* ── CSS variable helpers ────────────────────────────────── */
+        const root = document.documentElement;
+        function setVar(name, value) { root.style.setProperty(name, value); }
+
+        /* ── Glass params (mirrors :root defaults) ───────────────── */
+        window.GLASS_PARAMS = {
+            blur:       6,
+            tint:       0.005,
+            brightness: 0.81,
+            saturate:   0.75,
+            distort:    20,
+        };
+
+        /* ── lil-gui dev panel ──────────────────────────────────── */
+        if (typeof lil === 'undefined') { console.warn('lil-gui not loaded'); return; }
+
+        const gui = new lil.GUI({ title: 'Dev Panel', width: 280 });
+
+        // ─ Particle Animation ────────────────────────────────────
+        const anim = gui.addFolder('Particle Animation');
+
+        anim.add(window.ANIM_PARAMS, 'count', 200, 4000, 50)
+            .name('Count')
+            .onChange(v => window._buildPool(Math.round(v), false));
+
+        anim.add(window.ANIM_PARAMS, 'speed', 0.1, 4.0, 0.05)
+            .name('Speed');
+
+        anim.add(window.ANIM_PARAMS, 'noiseScale', 0.0001, 0.005, 0.0001)
+            .name('Noise Scale');
+
+        anim.add(window.ANIM_PARAMS, 'timeSpeed', 0.00005, 0.001, 0.00005)
+            .name('Time Speed');
+
+        anim.add(window.ANIM_PARAMS, 'fade', 0.01, 0.5, 0.005)
+            .name('Trail Fade');
+
+        anim.add(window.ANIM_PARAMS, 'spinStrength', 0.0, 1.5, 0.05)
+            .name('Spin Strength');
+
+        // ─ Glass Effect — live CSS variable updates ───────────────
+        const glass = gui.addFolder('Glass Effect');
+
+        glass.add(window.GLASS_PARAMS, 'blur', 0, 30, 0.5)
+            .name('Frost Blur (px)')
+            .onChange(v => setVar('--glass-blur', v + 'px'));
+
+        glass.add(window.GLASS_PARAMS, 'tint', 0, 0.18, 0.005)
+            .name('Tint')
+            .onChange(v => setVar('--glass-tint', v));
+
+        glass.add(window.GLASS_PARAMS, 'brightness', 0.5, 2.0, 0.01)
+            .name('Brightness')
+            .onChange(v => setVar('--glass-brightness', v));
+
+        glass.add(window.GLASS_PARAMS, 'saturate', 0.5, 3.0, 0.05)
+            .name('Saturation')
+            .onChange(v => setVar('--glass-saturate', v));
+
+        glass.add(window.GLASS_PARAMS, 'distort', 0, 60, 1)
+            .name('Lens Distortion')
+            .onChange(v => {
+                const el = document.getElementById('glass-displace');
+                if (el) el.setAttribute('scale', v);
+            });
+
+        // ─ Subtitle blend mode ───────────────────────────────────
+        const subtitleParams = { blendMode: 'difference' };
+        const blendModes = [
+            'normal', 'multiply', 'screen', 'overlay',
+            'darken', 'lighten', 'color-dodge', 'color-burn',
+            'hard-light', 'soft-light', 'difference', 'exclusion',
+            'hue', 'saturation', 'color', 'luminosity',
+        ];
+        const typography = gui.addFolder('Typography');
+        typography.add(subtitleParams, 'blendMode', blendModes)
+            .name('Subtitle Blend Mode')
+            .onChange(v => setVar('--subtitle-blend', v));
+
+        // ─ Export ────────────────────────────────────────────────
+        const exportActions = {
+            copy() {
+                const payload = JSON.stringify({
+                    animation: { ...window.ANIM_PARAMS },
+                    glass:     { ...window.GLASS_PARAMS },
+                }, null, 2);
+                navigator.clipboard.writeText(payload).then(
+                    () => console.log('%cCopied to clipboard', 'color:lime', '\n' + payload),
+                    () => console.log('Values:\n' + payload)
+                );
+            }
+        };
+        gui.add(exportActions, 'copy').name('📋  Copy All Values');
+    });
+    </script>
 </body>
 </html>
